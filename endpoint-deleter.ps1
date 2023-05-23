@@ -1,11 +1,13 @@
 <#
 .SYNOPSIS
-    VDI Clone Deletion Script
+    Deregistered Endpoint Deletion Script
 .DESCRIPTION
-    This script is used to delete VDI clones in the VMware Carbon Black Cloud environment based on specified criteria.
+    This script is used to delete deregistered endpoints in the VMware Carbon Black Cloud environment that have been unregistered for more than 5 minutes.
 
     Author: Leon Schulze
     GitHub: github.com/intrusus-dev
+
+    Copyright (c) 2023. All rights reserved.
 
     Licensed under the MIT License. See LICENSE file for more details.
 #>
@@ -22,21 +24,18 @@ $orgKey = $envFile.ORG_KEY
 # Construct the authentication token
 $authToken = "$apiSecret/$apiId"
 
-# Construct the current system time minus 1 hour
-$currentTimeMinus1Hour = (Get-Date).AddHours(-1).ToString("yyyy-MM-ddTHH:mm:ssZ")
+# Calculate the deregistered time threshold
+$deregisteredTimeThreshold = (Get-Date).AddMinutes(-5).ToString("yyyy-MM-ddTHH:mm:ssZ")
 
-# Construct the API endpoint URLs
+# Construct the API endpoint URL for device search
 $searchEndpointUrl = "$orgUrl/appservices/v6/orgs/$orgKey/devices/_search"
-$actionEndpointUrl = "$orgUrl/appservices/v6/orgs/$orgKey/device_actions"
 
 # Construct the request body for device search
 $searchRequestBody = @{
     "criteria" = @{
         "status" = @("DEREGISTERED")
-        "deployment_type" = @("VDI")
-        "golden_device_status" = @("NOT_GOLDEN_DEVICE")
-        "deregistered_time" = @{
-            "from" = $currentTimeMinus1Hour
+        "unregistered_time" = @{
+            "from" = $deregisteredTimeThreshold
             "range" = "gte"
         }
     }
@@ -57,18 +56,29 @@ try {
         'Content-Type' = 'application/json'
     } -Body $searchRequestBody
 
-    # Extract the device IDs from the search response
-    $deviceIds = $searchResponse.results.id
+    # Extract the device IDs and deregistered times from the search response
+    $devices = $searchResponse.results | Select-Object -Property id, deregistered_time
 
-    if ($deviceIds.Count -gt 0) {
+     if ($devices.Count -gt 0) {
+        # Output the deregistered endpoints and their deregistered times
+        Write-Host "Deregistered Endpoints:"
+        $devices | ForEach-Object {
+            Write-Host "Device ID: $($_.id)"
+            Write-Host "Deregistered Time: $($_.deregistered_time)"
+            Write-Host "------------------------"
+        }
+
+        # Construct the API endpoint URL for device deletion
+        $deleteEndpointUrl = "$orgUrl/appservices/v6/orgs/$orgKey/device_actions"
+
         # Construct the request body for device deletion
         $deleteRequestBody = @{
             "action_type" = "DELETE_SENSOR"
-            "device_id" = $deviceIds
+            "device_id" = $devices.id
         } | ConvertTo-Json
 
         # Invoke the API endpoint for device deletion with authentication and request body
-        $deleteResponse = Invoke-RestMethod -Uri $actionEndpointUrl -Method Post -Headers @{
+        $deleteResponse = Invoke-RestMethod -Uri $deleteEndpointUrl -Method Post -Headers @{
             'X-Auth-Token' = $authToken
             'Content-Type' = 'application/json'
         } -Body $deleteRequestBody
@@ -76,10 +86,10 @@ try {
         # Output the deletion response
         Write-Host "Deletion Response:"
         Write-Host $deleteResponse
-    }
-    else {
-        Write-Host "No devices found matching the criteria."
-    }
+     }
+     else {
+         Write-Host "No deregistered endpoints found that meet the criteria."
+     }
 }
 catch {
     Write-Host "Error: $($_.Exception.Message)"
