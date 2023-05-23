@@ -108,6 +108,15 @@ Once you have completed these steps, you will have the necessary API access leve
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Disclaimer
+Use of the script in any environment, including both production and testing environments, is at your own risk. The script has been tested in my own environment, but it may contain errors or bugs. I make no warranties or guarantees regarding the functionality, accuracy, or reliability of the script. 
+
+Before deploying the script in a production environment, it is strongly recommended to perform thorough testing with a small group of devices to ensure its proper functionality and compatibility with your specific setup.
+
+I shall not be held liable for any damages, losses, or issues arising from the use of the script. By using the script, you acknowledge and accept the risks involved and agree to release me from any liability related to its use.
+
+Please exercise caution and perform adequate testing and validation before deploying the script in any critical or production environment.
+
 ---
 
 <p align="center">
