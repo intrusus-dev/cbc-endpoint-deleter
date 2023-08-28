@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-    <em>A collection of scripts for managing VDI clones and deregistered endpoints in VMware Carbon Black Cloud</em>
+    <em>A collection of scripts for managing deregistered endpoints and VDI clones in VMware Carbon Black Cloud</em>
 </p>
 
 <p align="center">
@@ -17,6 +17,21 @@
 ## Overview
 
 This repository contains two PowerShell scripts for managing VDI clones and deregistered endpoints in the VMware Carbon Black Cloud environment. The scripts are designed to simplify the process of identifying and deleting specific types of devices based on predefined criteria.
+
+### Script 1: Deregistered Endpoint Deletion Script
+
+- Purpose: Deletes deregistered endpoints that meet specific criteria.
+- Function: Searches for deregistered endpoints matching the specified criteria and deletes them.
+- Script File: [deregistered-endpoint-deleter.ps1](deregistered-endpoint-deleter.ps1)
+
+#### Criteria for Device deletion
+To identify deregistered endpoints for deletion, the following criteria are used:
+
+- `status`: ["DEREGISTERED"]
+- `unregistered_time`: More than 5 minutes ago
+
+You can modify these criteria in the script to match your specific requirements. Open the `deregistered-endpoint-deleter.ps1` script file and locate the section where the request body is constructed. You can update the values in the `criteria` object to modify the criteria as needed.
+Corresponding criteria can be found in the official [API documentation](https://developer.carbonblack.com/reference/carbon-black-cloud/platform/latest/devices-api/).
 
 ### Script 1: VDI Clone Deletion Script
 
@@ -34,21 +49,6 @@ To identify VDI clones for deletion, the following criteria are used:
 - `deregistered_time`: More than 1h ago.
 
 You can modify these criteria in the script to match your specific requirements. Open the `vdi-clone-deleter.ps1` script file and locate the section where the request body is constructed. You can update the values in the `criteria` object to modify the criteria as needed.
-Corresponding criteria can be found in the official [API documentation](https://developer.carbonblack.com/reference/carbon-black-cloud/platform/latest/devices-api/).
-
-### Script 2: Deregistered Endpoint Deletion Script
-
-- Purpose: Deletes deregistered endpoints that meet specific criteria.
-- Function: Searches for deregistered endpoints matching the specified criteria and deletes them.
-- Script File: [deregistered-endpoint-deleter.ps1](deregistered-endpoint-deleter.ps1)
-
-#### Criteria for Device deletion
-To identify deregistered endpoints for deletion, the following criteria are used:
-
-- `status`: ["DEREGISTERED"]
-- `unregistered_time`: More than 5 minutes ago
-
-You can modify these criteria in the script to match your specific requirements. Open the `deregistered-endpoint-deleter.ps1` script file and locate the section where the request body is constructed. You can update the values in the `criteria` object to modify the criteria as needed.
 Corresponding criteria can be found in the official [API documentation](https://developer.carbonblack.com/reference/carbon-black-cloud/platform/latest/devices-api/).
 
 ## Requirements
