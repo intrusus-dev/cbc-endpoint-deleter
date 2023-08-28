@@ -1,7 +1,7 @@
 <h1 align="center">
     <img src="https://avatars.githubusercontent.com/u/2071378?s=200&v=4" alt="Script Icon" width="200">
     <br>
-    Automate VDI Clone / Endpoint Deletion in <br>VMware Carbon Black Cloud
+    Automate Endpoint and VDI Clone Deletion in VMware Carbon Black Cloud
 </h1>
 
 <p align="center">
