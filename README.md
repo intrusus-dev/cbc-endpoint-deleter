@@ -16,7 +16,7 @@
 
 ## Overview
 
-This repository contains two PowerShell scripts for managing VDI clones and deregistered endpoints in the VMware Carbon Black Cloud environment. The scripts are designed to simplify the process of identifying and deleting specific types of devices based on predefined criteria.
+This repository contains two PowerShell scripts for managing deregistered endpoints and deregistered VDI clones in the VMware Carbon Black Cloud inventory. The scripts are designed to simplify the process of identifying and deleting specific types of devices based on predefined criteria.
 
 ### Script 1: Deregistered Endpoint Deletion Script
 
